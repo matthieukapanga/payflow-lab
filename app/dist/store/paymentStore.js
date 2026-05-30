@@ -1,15 +1,16 @@
-import { Pool } from 'pg';
-import { Payment } from '../types/payment';
-
-const pool = new Pool({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.paymentStore = void 0;
+exports.initializeDatabase = initializeDatabase;
+const pg_1 = require("pg");
+const pool = new pg_1.Pool({
     host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT || '5432'),
     database: process.env.DB_NAME || 'payflow',
     user: process.env.DB_USER || 'payflow_user',
     password: process.env.DB_PASSWORD || '',
 });
-
-export async function initializeDatabase(): Promise<void> {
+async function initializeDatabase() {
     const client = await pool.connect();
     try {
         await client.query(`
@@ -24,34 +25,28 @@ export async function initializeDatabase(): Promise<void> {
             )
         `);
         console.log('[PayFlow] Database initialized successfully');
-    } finally {
+    }
+    finally {
         client.release();
     }
 }
-
-export const paymentStore = {
-    async save(payment: Payment): Promise<void> {
-        await pool.query(
-            `INSERT INTO payments (id, amount, currency, status, description, "createdAt", "updatedAt")
-             VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-            [
-                payment.id,
-                payment.amount,
-                payment.currency,
-                payment.status,
-                payment.description,
-                payment.createdAt,
-                payment.updatedAt
-            ]
-        );
+exports.paymentStore = {
+    async save(payment) {
+        await pool.query(`INSERT INTO payments (id, amount, currency, status, description, "createdAt", "updatedAt")
+             VALUES ($1, $2, $3, $4, $5, $6, $7)`, [
+            payment.id,
+            payment.amount,
+            payment.currency,
+            payment.status,
+            payment.description,
+            payment.createdAt,
+            payment.updatedAt
+        ]);
     },
-
-    async findById(id: string): Promise<Payment | null> {
-        const result = await pool.query(
-            'SELECT * FROM payments WHERE id = $1',
-            [id]
-        );
-        if (result.rows.length === 0) return null;
+    async findById(id) {
+        const result = await pool.query('SELECT * FROM payments WHERE id = $1', [id]);
+        if (result.rows.length === 0)
+            return null;
         const row = result.rows[0];
         return {
             id: row.id,
@@ -63,8 +58,7 @@ export const paymentStore = {
             updatedAt: row.updatedAt
         };
     },
-
-    async count(): Promise<number> {
+    async count() {
         const result = await pool.query('SELECT COUNT(*) FROM payments');
         return parseInt(result.rows[0].count);
     }

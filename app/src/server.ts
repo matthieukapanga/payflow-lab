@@ -1,6 +1,8 @@
 import express, {Application, Request, Response, NextFunction} from 'express';
 import routes from './routes/paymentRoutes';
 import { error, timeStamp } from 'node:console';
+import { initializeDatabase } from './store/paymentStore';
+
 
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
@@ -38,7 +40,10 @@ app.use((err:Error, req: Request, res: Response, next: NextFunction) =>{
 });
 
 //Start server
-app.listen(PORT, () => {
+async function start() {
+    try{
+        await initializeDatabase();
+        app.listen(PORT, () => {
     console.log(`
     ===============================
         PayFlow API Server
@@ -50,5 +55,12 @@ app.listen(PORT, () => {
     ===============================
         `);
 });
+}
+catch(error){
+    console.error('[Payflow] failed to start server: ', error);
+    process.exit(1);
+}
+}
+start();
 
 export default app;
