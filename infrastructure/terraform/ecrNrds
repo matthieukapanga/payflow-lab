@@ -1,0 +1,2 @@
+ecr_url = 817685573335.dkr.ecr.af-south-1.amazonaws.com/payflow-api
+rds_endpoint = payflow-dev-db.cny4uusucpoy.af-south-1.rds.amazonaws.com

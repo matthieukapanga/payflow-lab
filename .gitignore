@@ -5,6 +5,7 @@
 credentials
 aws-credentials.json
 
+
 # Environment variables
 .env
 .env.local
@@ -16,6 +17,9 @@ infrastructure/terraform/*.tfstate
 infrastructure/terraform/*.tfstate.backup
 infrastructure/terraform/terraform.tfvars
 infrastructure/terraform/.terraform.lock.hc1
+infrastructure/terraform/ecrNrds
+infrastructure/terraform/ecr
+
 
 # Node.js
 node_modules/
