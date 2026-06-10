@@ -14,6 +14,7 @@ aws-credentials.json
 infrastructure/terraform/.terraform
 infrastructure/terraform/*.tfstate
 infrastructure/terraform/*.tfstate.backup
+infrastructure/terraform/terraform.tfvars
 infrastructure/terraform/.terraform.lock.hc1
 
 # Node.js
